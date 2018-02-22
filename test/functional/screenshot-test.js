@@ -1,6 +1,9 @@
 const { launchCompass, quitCompass} = require('./support/spectron-support');
+const {BrowserWindow} = require('electron')
+var electron = require('electron');
+var fs = require('fs');
 
-describe('#launch', function() {
+describe('#compass-screenshot', function() {
   this.slow(30000);
   this.timeout(60000);
   let app = null;
@@ -13,9 +16,19 @@ describe('#launch', function() {
     });
   });
 
-  after(function() {
-    return quitCompass(app);
-  });
+  after(screenshotAndQuit("screenshot-compass-home.png"));
+
+  function screenshotAndQuit(filename) {
+    return function(done) {
+      app.app.browserWindow.capturePage().then(function(imageBuffer) {
+        fs.writeFile('page.png', imageBuffer, function(err) {
+          if (err) return done(err);
+          console.log("Took screenshot!", filename);
+          quitCompass(app, done);
+        });
+      });
+    };
+  }
 
   context('when launching the application', function() {
     it('displays the feature tour modal', function() {

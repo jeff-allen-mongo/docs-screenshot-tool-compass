@@ -133,7 +133,7 @@ var createWindow = module.exports.create = function(opts) {
     'web-preferences': {
       'subpixel-font-scaling': true,
       'direct-write': true,
-      'nodeIntegration': false
+      'nodeIntegration': true
     }
   });
 
